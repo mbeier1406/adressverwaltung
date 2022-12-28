@@ -9,4 +9,18 @@
 	<name>Adressverwaltung</name>
 	<description>Demonstration Java FX und JPA-Technologien.</description>
 
+	<developers>
+		<developer>
+			<id>mbeier1406</id>
+			<name>Martin Beier</name>
+			<email>Martin.Beier@gmx.de</email>
+			<url>https://github.com/mbeier1406/</url>
+			<organization>None</organization>
+			<organizationUrl>https://github.com/mbeier1406/</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
 </project>
