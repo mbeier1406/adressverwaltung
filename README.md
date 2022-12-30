@@ -11,8 +11,8 @@
 
 ## Voraussetzung
 
-Installation einer <i>Oracle-Datenbank</i> und dem <i>SQL*Developer</i>:
-<a href="https://github.com/mbeier1406/JavaFX#jdbc-beispiele">Anleitung</a>.
+Installation einer <i>Oracle-Datenbank</i> (<a href="https://github.com/mbeier1406/JavaFX#jdbc-beispiele">Anleitung</a>)
+und dem <i>SQL*Developer</i> (<a href="https://github.com/mbeier1406/scanner#persistenz">Anletung</a>).
 
 # Datenbankbenutzer einrichten
 
