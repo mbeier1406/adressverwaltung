@@ -1,5 +1,7 @@
 package com.github.mbeier1406.adressverwaltung.model;
 
+import java.util.Objects;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -19,12 +21,16 @@ public class PersonPersistenceIT {
 
 	@Test
 	public void testePersitieren() {
-		final var person = new Person("Max", "Mustermann");
+		var person = new Person("Max", "Mustermann");
 		LOGGER.info("Person: {}", person);
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("adressverwaltung");
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		em.persist(person);
+//		em.persist(person);
+		person = Objects.requireNonNull(em.find(Person.class, 1L), "Nicht vorhanden!");
+		LOGGER.info("person={}", person);
+//		person.setVorname("Eva");
+		em.remove(person);
 		em.getTransaction().commit();
 		em.close();
 		emf.close();
