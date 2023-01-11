@@ -23,11 +23,10 @@ public class DaoJPA<T> implements Dao<T> {
 	private final EntityManager em;
 	private final Class<T> c;
 
-	@SuppressWarnings("unchecked")
-	public DaoJPA(T t) {
+	public DaoJPA(Class<T> t) {
 		emf = Persistence.createEntityManagerFactory(ADRESSVERWALTUNG);
 		em = emf.createEntityManager();
-		c = (Class<T>) requireNonNull(t, "t ist Null!").getClass();
+		c = (Class<T>) requireNonNull(t, "t ist Null!");
 	}
 
 	/** {@inheritDoc} */

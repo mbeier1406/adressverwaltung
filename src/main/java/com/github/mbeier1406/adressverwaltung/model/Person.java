@@ -1,6 +1,7 @@
 package com.github.mbeier1406.adressverwaltung.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -52,6 +53,23 @@ public class Person implements Serializable {
 
 	public void setNachname(String nachname) {
 		this.nachname = nachname;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nachname, vorname);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		return Objects.equals(nachname, other.nachname) && Objects.equals(vorname, other.vorname);
 	}
 
 	@Override
