@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * Standard DAO-Pattern.
  * @author mbeier
- * @param <T> Entity z. B. {@linkplain Person}
+ * @param <T> Entity z. B. {@linkplain PersonImpl}
  */
 public interface Dao<T> {
 

@@ -12,7 +12,7 @@ import javax.persistence.Query;
 /**
  * Standard JPA-implementierung.
  * @author mbeier
- * @param <T> Entity z. B. {@linkplain Person}
+ * @param <T> Entity z. B. {@linkplain PersonImpl}
  */
 public class DaoJPA<T> implements Dao<T> {
 

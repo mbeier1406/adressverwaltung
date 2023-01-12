@@ -1,80 +1,75 @@
 package com.github.mbeier1406.adressverwaltung.model;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.Date;
 
 /**
- * Entity implementation class for Entity: Person
+ * Definiert das Interface zur Klasse einer Person.
+ * @author mbeier
+ *
  */
-@Entity
-public class Person implements Serializable {
+public interface Person {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	private long id;
-	private String vorname;
-	private String nachname;
-	private static final long serialVersionUID = 1L;
+	/**	Zur Demonstartion der <code>@enumerated</code> Annotation */
+	public enum Geschlecht { WEIBLICH, MAENNLICH }
 
-	public Person() {
-		super();
-	}
+	/**
+	 * Liefert den Vornamen.
+	 * @return den Vornamen
+	 */
+	public String getVorname();
 
-	public Person(String vorname, String nachname) {
-		super();
-		this.vorname = vorname;
-		this.nachname = nachname;
-	}
+	/**
+	 * Setzt den Vornamen.
+	 * @param vorname der Vorname
+	 */
+	public void setVorname(final String vorname);
 
-	public long getId() {
-		return this.id;
-	}
+	/**
+	 * Liefert den Nachnamen.
+	 * @return den Nachnamen
+	 */
+	public String getNachname();
 
-	public void setId(long id) {
-		this.id = id;
-	}
+	/**
+	 * Setzt den Nachnamen.
+	 * @param nachname der Nachnamen
+	 */
+	public void setNachname(final String nachname);
 
-	public String getVorname() {
-		return this.vorname;
-	}
+	/**
+	 * Liefert das Geburtsdatum.
+	 * @return das Geburtsdatum
+	 */
+	public Date getGeburtsdatum();
 
-	public void setVorname(String vorname) {
-		this.vorname = vorname;
-	}
+	/**
+	 * Setzt das Geburtsdatum.
+	 * @param geburtsdatum das Geburtsdatum
+	 */
+	public void setGeburtsdatum(final Date geburtsdatum);
 
-	public String getNachname() {
-		return this.nachname;
-	}
+	/**
+	 * Liefert das Geschlecht.
+	 * @return das Geschlecht
+	 */
+	public Geschlecht getGeschlecht();
 
-	public void setNachname(String nachname) {
-		this.nachname = nachname;
-	}
+	/**
+	 * Setzt das Geschlecht.
+	 * @param geschlecht das Geschlecht
+	 */
+	public void setGeschlecht(final Geschlecht geschlecht);
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(nachname, vorname);
-	}
+	/**
+	 * Liefert das Passbild.
+	 * @return das Passbild
+	 */
+	public byte[] getPassbild();
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Person other = (Person) obj;
-		return Objects.equals(nachname, other.nachname) && Objects.equals(vorname, other.vorname);
-	}
-
-	@Override
-	public String toString() {
-		return "Person [id=" + id + ", vorname=" + vorname + ", nachname=" + nachname + "]";
-	}
+	/**
+	 * Setzt das Passbild.
+	 * @param passbild das Passbild
+	 */
+	public void setPassbild(final byte[] passbild);
 
 }

@@ -1,9 +1,14 @@
 package com.github.mbeier1406.adressverwaltung.model;
 
+import static com.github.mbeier1406.adressverwaltung.model.Person.Geschlecht.MAENNLICH;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,10 +29,19 @@ public class DaoJPATest {
 	public static final Logger LOGGER = LogManager.getLogger(DaoJPATest.class);
 
 	/** Das zu testende Objekt */
-	public static Dao<Person> dao;
+	public static Dao<PersonImpl> dao;
 
 	/** Das Objekt, mit dem getestet wird */
-	public static Person p = new Person("Kulle", "Wolters");
+	public static PersonImpl p;
+	static {
+		try {
+			p = new PersonImpl("Kulle", "Wolters",
+					new Date(), MAENNLICH,
+					Files.readAllBytes(Paths.get("src/main/resources/images/maxmustermann.png")));
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
 
 	public static long id = 0;
 
@@ -35,7 +49,7 @@ public class DaoJPATest {
 	@BeforeClass
 	public static void init() {
 		LOGGER.info("DB verbinden...");
-		dao = new DaoJPA<>(Person.class);
+		dao = new DaoJPA<>(PersonImpl.class);
 	}
 
 	/** Zuletzt Datenbank schließen */
@@ -49,7 +63,7 @@ public class DaoJPATest {
 	@Test
 	public void a_testeToString() {
 		LOGGER.info("dao={}", dao);
-		assertThat(dao.toString(), equalTo("DaoJPA [c=class com.github.mbeier1406.adressverwaltung.model.Person]"));
+		assertThat(dao.toString(), equalTo("DaoJPA [c=class com.github.mbeier1406.adressverwaltung.model.PersonImpl]"));
 	}
 
 	/** Fügt einen Datensatz ein, der später abgefragt wird */
@@ -78,7 +92,7 @@ public class DaoJPATest {
 	/** Datensatz aus {@linkplain #b_testInsert()} aus der Liste aller Datensätze finden */
 	@Test
 	public void e_testeFindAll() {
-		List<Person> personen = (List<Person>) dao.findAll();
+		List<PersonImpl> personen = (List<PersonImpl>) dao.findAll();
 		LOGGER.info("personen={}", personen);
 		assertThat(personen, contains(p));
 	}
