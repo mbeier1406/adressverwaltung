@@ -2,6 +2,9 @@ package com.github.mbeier1406.adressverwaltung.model;
 
 import java.util.Collection;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnitUtil;
+
 /**
  * Standard DAO-Pattern.
  * @author mbeier
@@ -11,6 +14,12 @@ public interface Dao<T> {
 
 	/** Datenbank schließen */
 	public void shutdown();
+
+	/**
+	 * Liefert das {@linkplain PersistenceUnitUtil} der {@linkplain EntityManagerFactory}.
+	 * @return das PersistenceUnitUtil
+	 */
+	public PersistenceUnitUtil getPersistenceUnitUtil();
 
 	/**
 	 * Sucht das Objekt anhand seiner ID.

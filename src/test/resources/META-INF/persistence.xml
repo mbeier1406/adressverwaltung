@@ -12,7 +12,7 @@
 			<property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521/XEPDB1" />
 			<property name="javax.persistence.jdbc.user" value="mdd" />
 			<property name="javax.persistence.jdbc.password" value="qwe123" />
-			<property name="hibernate.hbm2ddl.auto" value="create"/>
+			<property name="hibernate.hbm2ddl.auto" value="update"/>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect"/>
 		</properties>
 	</persistence-unit>

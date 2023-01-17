@@ -78,6 +78,9 @@ public class DaoJPATest {
 	public void c_testeFindById() {
 		final var person = dao.findById(id);
 		LOGGER.info("person={}", person);
+		assertThat(dao.getPersistenceUnitUtil().getIdentifier(p), equalTo(p.getId()));
+		assertThat(dao.getPersistenceUnitUtil().isLoaded(p), equalTo(true));
+		assertThat(dao.getPersistenceUnitUtil().isLoaded(p, "vorname"), equalTo(true));
 		assertThat(person, equalTo(p));
 	}
 
