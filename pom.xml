@@ -8,6 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Adressverwaltung</name>
 	<description>Demonstration Java FX und JPA-Technologien.</description>
+	<packaging>pom</packaging>
 
 	<developers>
 		<developer>
@@ -26,33 +27,63 @@
 	<properties>
 		<java.version>19</java.version>
 		<org.apache.logging.log4j.version>2.19.0</org.apache.logging.log4j.version>
+		<org.hamcrest.version>1.3</org.hamcrest.version>
+		<org.junit.version>4.13.2</org.junit.version>
 	</properties>
 
+	<modules>
+		<module>adressverwaltung-se</module>
+		<module>adressverwaltung-jee</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>adressverwaltung</finalName>
+	</build>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${org.junit.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.hamcrest</groupId>
+			    <artifactId>hamcrest-all</artifactId>
+			    <version>${org.hamcrest.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${org.apache.logging.log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${org.apache.logging.log4j.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
 	<dependencies>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>5.3.6.Final</version>
-        </dependency>
-		<dependency>
-			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc8</artifactId>
-			<version>21.8.0.0</version>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>${org.apache.logging.log4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>${org.apache.logging.log4j.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -66,13 +97,11 @@
 				<dependency>
 					<groupId>junit</groupId>
 					<artifactId>junit</artifactId>
-					<version>4.13.2</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
 				    <groupId>org.hamcrest</groupId>
 				    <artifactId>hamcrest-all</artifactId>
-				    <version>1.3</version>
 				    <scope>test</scope>
 				</dependency>
 			</dependencies>
