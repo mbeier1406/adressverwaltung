@@ -8,3 +8,8 @@ CREATE TABLE PERSON (
 );
 
 CREATE INDEX NACHNAMENINDEX ON PERSON(NACHNAME);
+
+
+select * from person;
+delete from person;
+-- commit;

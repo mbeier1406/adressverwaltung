@@ -2,7 +2,7 @@ package com.github.mbeier1406.adressverwaltung.model;
 
 import static com.github.mbeier1406.adressverwaltung.model.Person.Geschlecht.MAENNLICH;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.IOException;
@@ -97,7 +97,7 @@ public class DaoJPATest {
 	public void e_testeFindAll() {
 		List<PersonImpl> personen = (List<PersonImpl>) dao.findAll();
 		LOGGER.info("personen={}", personen);
-		assertThat(personen, contains(p));
+		assertThat(personen, hasItem(p));
 	}
 
 	/** Person mit der {@linkplain #id} wieder löschen darf keine Exception werfen */
