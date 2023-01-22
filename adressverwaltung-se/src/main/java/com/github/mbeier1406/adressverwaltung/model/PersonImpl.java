@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ import javax.persistence.Transient;
 /**
  * Entity implementation class for Entity: Person
  */
+@EntityListeners({ PersonListener.class })
 @Entity
 @Table(name="person")
 public class PersonImpl implements Serializable, Person {

@@ -7,6 +7,7 @@ import java.util.Collection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Query;
 
 /**
@@ -34,6 +35,12 @@ public class DaoJPA<T> implements Dao<T> {
 	public void shutdown() {
 		em.close();
 		emf.close();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public PersistenceUnitUtil getPersistenceUnitUtil() {
+		return emf.getPersistenceUnitUtil();
 	}
 
 	/** {@inheritDoc} */
