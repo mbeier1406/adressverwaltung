@@ -12,18 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.github.mbeier1406.adressverwaltung.jee.model.Person;
 import com.github.mbeier1406.adressverwaltung.jee.model.PersonImpl;
-import com.github.mbeier1406.adressverwaltung.jee.model.PersonService;
 
 /**
- * Servlet implementation class PersonServlet
+ * Servlet implementation class PersonServlet: CRUD-Implementierung für {@linkplain Person} über http.
  */
 @WebServlet("/PersonServlet")
 public class PersonServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	/** Der Datenbank-Service CRUD */
 	@EJB
-	private PersonService personService;
+	private DBService<Person> personService;
 
 	/**
      * @see HttpServlet#HttpServlet()
@@ -36,9 +36,9 @@ public class PersonServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		final var p = new PersonImpl("Willi", "Wichtig", new Date(), Person.Geschlecht.WEIBLICH, null);
-		personService.persist(p);
+		final var p = new PersonImpl("Michelle", "Wichtig", new Date(), Person.Geschlecht.WEIBLICH, null);
 		System.out.println("p="+p);
+		personService.persist(p);
 		response.getWriter().append("Served at: ").append(request.getContextPath()).append(p.toString());
 		System.out.println("p="+p);
 	}

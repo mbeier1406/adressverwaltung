@@ -1,5 +1,6 @@
 package com.github.mbeier1406.adressverwaltung.model;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,6 +20,9 @@ import javax.persistence.PreUpdate;
  * @see Person
  */
 public class PersonListener {
+
+	/** Das Verzeichnis, in das die Protokolldateien geschrieben werden, ist {@value} */
+	private static final String TMP_DIR = System.getProperty("java.io.tmpdir")+File.separator;
 
 	@PrePersist
 	public void beforePersisting(Person p) {
@@ -49,7 +53,7 @@ public class PersonListener {
 
 	private void logEntity(String name, Person p) {
 		try {
-			Files.writeString(Paths.get("target/"+name+"_"+((PersonImpl) p).getId()+".txt"), p.toString(), StandardOpenOption.CREATE);
+			Files.writeString(Paths.get(TMP_DIR+name+"_"+((PersonImpl) p).getId()+".txt"), p.toString(), StandardOpenOption.CREATE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

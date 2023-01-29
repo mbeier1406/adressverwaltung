@@ -1,9 +1,11 @@
-package com.github.mbeier1406.adressverwaltung.model;
+package com.github.mbeier1406.adressverwaltung;
 
 import java.util.Collection;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnitUtil;
+
+import com.github.mbeier1406.adressverwaltung.model.PersonImpl;
 
 /**
  * Standard DAO-Pattern.

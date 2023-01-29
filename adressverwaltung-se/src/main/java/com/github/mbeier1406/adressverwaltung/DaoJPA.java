@@ -1,4 +1,4 @@
-package com.github.mbeier1406.adressverwaltung.model;
+package com.github.mbeier1406.adressverwaltung;
 
 import static java.util.Objects.requireNonNull;
 
@@ -9,6 +9,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Query;
+
+import com.github.mbeier1406.adressverwaltung.model.PersonImpl;
 
 /**
  * Standard JPA-implementierung.

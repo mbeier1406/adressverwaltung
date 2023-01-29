@@ -19,6 +19,9 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.github.mbeier1406.adressverwaltung.Dao;
+import com.github.mbeier1406.adressverwaltung.DaoJPA;
+
 /**
  * Tests für die Klasse {@linkplain DaoJPA}.
  * @author mbeier
