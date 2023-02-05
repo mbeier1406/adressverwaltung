@@ -15,7 +15,7 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
 /**
- * Protokolliert JPA-Aktionen mit der Entity {@linkplain PersonImpl}.
+ * Protokolliert JPA-Aktionen mit der Entity {@linkplain Person}.
  * @author mbeier
  * @see Person
  */
@@ -53,7 +53,7 @@ public class PersonListener {
 
 	private void logEntity(String name, Person p) {
 		try {
-			Files.writeString(Paths.get(TMP_DIR+name+"_"+((PersonImpl) p).getId()+".txt"), p.toString(), StandardOpenOption.CREATE);
+			Files.writeString(Paths.get(TMP_DIR+name+"_"+((Person) p).getId()+".txt"), p.toString(), StandardOpenOption.CREATE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

@@ -60,10 +60,9 @@ public class DaoJPA<T> implements Dao<T> {
 	}
 
 	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
 	@Override
 	public T findByProperty(String property, String value) throws IllegalArgumentException {
-		return (T) em.createQuery("select p from " + c.getSimpleName() + " p where p." + property + " = :x")
+		return (T) em.createQuery("select p from " + c.getSimpleName() + " p where p." + property + " = :x", c)
 	    	     .setParameter("x", value)
 	    	     .getSingleResult();
 	}
