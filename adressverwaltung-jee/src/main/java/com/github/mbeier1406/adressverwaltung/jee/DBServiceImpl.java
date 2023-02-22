@@ -8,6 +8,12 @@ import javax.persistence.PersistenceContext;
 
 import com.github.mbeier1406.adressverwaltung.jee.model.Person;
 
+/**
+ * Standard JPA-Implementierung für den DB-Service.
+ * @author mbeier
+ * TODO: fehlene CRUD-Methoden implemntieren
+ * @param <T>
+ */
 @Stateless
 public class DBServiceImpl<T> implements DBService<T> {
 

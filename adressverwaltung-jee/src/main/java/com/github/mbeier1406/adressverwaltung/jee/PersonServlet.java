@@ -2,10 +2,10 @@ package com.github.mbeier1406.adressverwaltung.jee;
 
 import static org.apache.logging.log4j.CloseableThreadContext.put;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Properties;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -23,6 +23,8 @@ import com.github.mbeier1406.adressverwaltung.jee.model.Person;
 
 /**
  * CRUD-Implementierung für {@linkplain Person} über http.
+ * TODO: korrekte Fehlebehandlung, Logging und fehlende Funktionen
+ * (delete, update) implementieren.
  */
 @WebServlet("/PersonServlet")
 public class PersonServlet extends HttpServlet {
@@ -51,12 +53,14 @@ public class PersonServlet extends HttpServlet {
     }
 
 	/**
+	 * Ein {@linkplain Person}-Objekt aus der DB lesen.
 	 * <p>
 	 * <code>wget -q -S -O - "http://localhost:8080/adressverwaltung/PersonServlet?id=2601"</code>
 	 * </p>
 	 * <p>
 	 * <code>wget -q -S -O - "http://localhost:8080/adressverwaltung/PersonServlet?prop=vorname&val=Herbert"</code>
 	 * </p>
+	 * TODO: bei {@linkplain DBService#findByProperty(String, String)} den Fall mit mehreren Treffern behandeln!
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@Override
@@ -70,7 +74,7 @@ public class PersonServlet extends HttpServlet {
 			Person p;
 			if ( id != null )
 				p = personService.findById(Long.parseLong(id));
-			else
+			else // FIXME: Properties müssen gesetzt sein prüfen
 				p = personService.findByProperty(prop, val);
 			System.out.println("p=" + p);
 			response.setContentType("text/html");
@@ -82,28 +86,27 @@ public class PersonServlet extends HttpServlet {
 	}
 
 	/**
-	 * $ wget --quiet --server-response --output-document=- --method=PUT --body-data "ccc^Mxxx" http://localhost:8080/adressverwaltung/PersonServlet
-	 * 
+	 * $ wget --quiet --server-response --output-document=- --method=PUT --body-data "name=Herbert^Mnachname=Reuter^Mgeburtsdatum=12.03.1988^Mgeschlecht=m" http://localhost:8080/adressverwaltung/PersonServlet
+	 * FIXME: fehlende Properties behandeln.
 	 * @see HttpServlet#doPut(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@Override
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try ( CloseableThreadContext.Instance ctx = put("request", request.toString()).put("Info", getServletInfo());
-				BufferedReader reader = request.getReader();
 				PrintWriter pw = response.getWriter() ) {
-			for ( String line=""; line != null; line = reader.readLine() )
-				LOGGER.info("line={}", line);
-//			final var p = new Person("Michelle", "Wichtig", new Date(), Person.Geschlecht.WEIBLICH, null);
-//			System.out.println("p=" + p);
-//			personService.persist(p);
-//			response.getWriter().append("Served at: ").append(request.getContextPath()).append(p.toString());
-//			System.out.println("p=" + p);
-	//	      int userId = retrieveUserid(req);
-	//	      String body = inputStreamToString(req.getInputStream());
-	//	      System.out.println("body: " + body);
-	//	      UserDataService.Instance.saveUserById(userId, body);
+			Properties prop = new Properties();
+			prop.load(request.getInputStream());
+			LOGGER.trace("prop={}", prop);
+			final var p = new Person(
+					prop.getProperty("name"),
+					prop.getProperty("nachname"),
+					new SimpleDateFormat("dd.MM.yyyy").parse(prop.getProperty("geburtsdatum")),
+					prop.getProperty("geschlecht").equals("w") ? Person.Geschlecht.WEIBLICH : Person.Geschlecht.MAENNLICH,
+					null);
+			LOGGER.info("p={}", p);
+			personService.persist(p);
 			response.setContentType("text/html");
-			pw.println("Gespeichert.");
+			pw.println("Gespeichert: "+p);
 		}
 		catch ( Exception e ) {
 			LOGGER.error("request={}", request, e);

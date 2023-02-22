@@ -1,5 +1,11 @@
 package com.github.mbeier1406.adressverwaltung.jee;
 
+/**
+ * Definiert das Interface zum DB-Service.
+ * @author mbeier
+ * TODO: fehlende CRUD-Methoden definieren
+ * @param <T>
+ */
 public interface DBService<T> {
 
 	public void setType(final Class<T> c);
