@@ -23,11 +23,15 @@
 	<build>
 		<plugins>
 			<plugin>
+				<!--
+					$ mvn help:describe -Dplugin=org.openjfx:javafx-maven-plugin -Ddetail=true
+					$ mvn clean javafx:run
+				-->
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>${javafx.maven.plugin.version}</version>
 				<configuration>
-					<mainClass>com.github.mbeier1406.adressverwaltung.HelloFX</mainClass>
+					<mainClass>com.github.mbeier1406.adressverwaltung.Main</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

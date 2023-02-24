@@ -1,6 +1,3 @@
-# Adressverwaltung Java FX
-
-
 # Starten der Anwendung
 
 Die <a href="https://openjfx.io/openjfx-docs/#maven">openjfx.io</a>
