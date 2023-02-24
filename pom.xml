@@ -32,8 +32,9 @@
 	</properties>
 
 	<modules>
-		<module>adressverwaltung-se</module>
+		<module>adressverwaltung-fx</module>
 		<module>adressverwaltung-jee</module>
+		<module>adressverwaltung-se</module>
 	</modules>
 
 	<build>

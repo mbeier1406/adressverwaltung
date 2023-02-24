@@ -12,7 +12,7 @@
 	</parent>
 
 	<artifactId>adressverwaltung-se</artifactId>
-	<description>Demonstration Java FX und JPA-Technologien.</description>
+	<description>Demonstration JPA-Technologien.</description>
 
 
 	<dependencies>
