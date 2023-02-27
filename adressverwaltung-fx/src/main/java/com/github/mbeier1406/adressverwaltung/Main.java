@@ -53,6 +53,12 @@ public class Main extends Application {
 		final var kommentarLabel = new Label("Kommentar");
 		final var kommentarTextField = new TextField();
 
+		final var neuButton = new Button("Neue Person");
+		final var speichernButton = new Button("Person speichern");
+		final var loeschenButton = new Button("Person löschen");
+		final var buttonFlowPane = new FlowPane();
+		buttonFlowPane.getChildren().addAll(neuButton, speichernButton, loeschenButton);
+
 		final var gridPane = new GridPane();
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
@@ -70,6 +76,7 @@ public class Main extends Application {
 		gridPane.add(geschlechtFlowPane, 1, 5);
 		gridPane.add(kommentarLabel, 0, 6);
 		gridPane.add(kommentarTextField, 1, 6);
+		gridPane.add(buttonFlowPane, 0, 7, 2, 1);
 
 		final ListView<String> listView = new ListView<>();
 		final ObservableList<String> observableList = FXCollections.observableArrayList("eins", "zwei", "drei");
@@ -78,10 +85,16 @@ public class Main extends Application {
 		final var borderPane = new BorderPane();
 		borderPane.setLeft(listView);
 		borderPane.setCenter(gridPane);
+		//borderPane.se
 
 		primaryStage.setTitle("Adressverwaltung");
 		primaryStage.setScene(new Scene(borderPane, 750, 380));
 		primaryStage.show();
+
+		listView.setOnMouseClicked(event -> {});
+		neuButton.setOnAction(event -> {});
+		speichernButton.setOnAction(event -> {});
+		loeschenButton.setOnAction(event -> {});
 	}
 
 	public static void main(String[] args) {
