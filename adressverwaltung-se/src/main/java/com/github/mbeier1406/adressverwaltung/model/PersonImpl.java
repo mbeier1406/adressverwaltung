@@ -37,6 +37,7 @@ public class PersonImpl implements Serializable, Person {
 	private Geschlecht geschlecht;
 	private byte[] passbild;
 	private char[] daten;
+	private String kommentar;
 	private static final long serialVersionUID = 1L;
 
 	public PersonImpl() {
@@ -127,6 +128,18 @@ public class PersonImpl implements Serializable, Person {
 		this.passbild = passbild;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public String getKommentar() {
+		return kommentar;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setKommentar(String kommentar) {
+		this.kommentar = kommentar;
+	}
+
 	@Transient // nicht persistieren
 	public char[] getDaten() {
 		return daten;
@@ -134,6 +147,11 @@ public class PersonImpl implements Serializable, Person {
 
 	public void setDaten(char[] daten) {
 		this.daten = daten;
+	}
+
+	public String toInfo() {
+		return "PersonImpl [id=" + id + ", vorname=" + vorname + ", nachname=" + nachname + ", geburtsdatum="
+				+ geburtsdatum + ", geschlecht=" + geschlecht + "]";
 	}
 
 	@Override
@@ -156,8 +174,7 @@ public class PersonImpl implements Serializable, Person {
 
 	@Override
 	public String toString() {
-		return "PersonImpl [id=" + id + ", vorname=" + vorname + ", nachname=" + nachname + ", geburtsdatum="
-				+ geburtsdatum + ", geschlecht=" + geschlecht + "]";
+		return vorname + " " + nachname;
 	}
 
 }

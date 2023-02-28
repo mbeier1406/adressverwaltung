@@ -1,5 +1,14 @@
 package com.github.mbeier1406.adressverwaltung;
 
+import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+
+import com.github.mbeier1406.adressverwaltung.model.Person;
+import com.github.mbeier1406.adressverwaltung.model.PersonImpl;
+import com.github.mbeier1406.adressverwaltung.model.Person.Geschlecht;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,37 +35,48 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
+	private final Dao<PersonImpl> personDAO = new DaoJPA<>(PersonImpl.class);
+	private Person aktuellePerson;
+
+	private TextField vornameTextField;
+	private TextField nachnameTextField;
+	private ImageView bildView;
+	private DatePicker geburtsdatumDatePicker;
+	private RadioButton maennlichRadioButton;
+	private RadioButton weiblichRadioButton;
+	private TextField kommentarTextField;
+
 	@Override
 	public void start(Stage primaryStage) {
 
 		final var fileChooser = new FileChooser();
 
 		final var vornameLabel = new Label("Vorname");
-		final var vornameTextField = new TextField();
+		vornameTextField = new TextField();
 		final var nachnameLabel = new Label("Nachname");
-		final var nachnameTextField = new TextField();
+		nachnameTextField = new TextField();
 		final var bildLabel = new Label("Passbild");
-		final var bildView = new ImageView(new Image("file:src/main/resources/images/maxmustermann.png", 0, 100, true, false));
+		bildView = new ImageView(new Image("file:src/main/resources/images/maxmustermann.png", 0, 100, true, false));
 		final var neuesBildButton = new Button("Passbild laden");
 		final var geburtsdatumLabel = new Label("Geburtsdatum");
-		final var geburtsdatumDatePicker = new DatePicker();
+		geburtsdatumDatePicker = new DatePicker();
 		final var geschlechtLabel = new Label("Geschlecht");
 		final var geschlechtToggleGroup = new ToggleGroup();
-		final var maennlichRadioButton = new RadioButton("Männlich");
+		maennlichRadioButton = new RadioButton("Männlich");
 		maennlichRadioButton.setToggleGroup(geschlechtToggleGroup);
 		maennlichRadioButton.setSelected(true);
 		maennlichRadioButton.setPadding(new Insets(0, 10, 0, 0));
-		final var weiblichRadioButton = new RadioButton("Weiblich");
+		weiblichRadioButton = new RadioButton("Weiblich");
 		weiblichRadioButton.setToggleGroup(geschlechtToggleGroup);
 		final var geschlechtFlowPane = new FlowPane();
 		geschlechtFlowPane.getChildren().addAll(maennlichRadioButton, weiblichRadioButton);
 		final var kommentarLabel = new Label("Kommentar");
-		final var kommentarTextField = new TextField();
+		kommentarTextField = new TextField();
 
 		final var neuButton = new Button("Neue Person");
 		final var speichernButton = new Button("Person speichern");
 		final var loeschenButton = new Button("Person löschen");
-		final var buttonFlowPane = new FlowPane();
+		final var buttonFlowPane = new FlowPane(10, 5);
 		buttonFlowPane.getChildren().addAll(neuButton, speichernButton, loeschenButton);
 
 		final var gridPane = new GridPane();
@@ -78,8 +98,8 @@ public class Main extends Application {
 		gridPane.add(kommentarTextField, 1, 6);
 		gridPane.add(buttonFlowPane, 0, 7, 2, 1);
 
-		final ListView<String> listView = new ListView<>();
-		final ObservableList<String> observableList = FXCollections.observableArrayList("eins", "zwei", "drei");
+		final ListView<Person> listView = new ListView<>();
+		final ObservableList<Person> observableList = FXCollections.observableArrayList(ladePersonen());
 		listView.setItems(observableList);
 
 		final var borderPane = new BorderPane();
@@ -91,10 +111,66 @@ public class Main extends Application {
 		primaryStage.setScene(new Scene(borderPane, 750, 380));
 		primaryStage.show();
 
-		listView.setOnMouseClicked(event -> {});
+		listView.setOnMouseClicked(event -> {
+			final var person = listView.getSelectionModel().getSelectedItem();
+			System.out.println("person="+person);
+			personAktualisieren(person);
+		});
+		neuesBildButton.setOnAction(event -> {
+			final var file = fileChooser.showOpenDialog(primaryStage);
+			System.out.println("file="+file);
+			if ( file != null ) {
+				
+			}
+
+		});
 		neuButton.setOnAction(event -> {});
 		speichernButton.setOnAction(event -> {});
 		loeschenButton.setOnAction(event -> {});
+	}
+
+	@Override
+	public void stop() throws Exception {
+		super.stop();
+		personDAO.shutdown();
+	}
+
+	/**
+	 * Alle Personen aus der Datenbank laden un als FX-Collection zurückgeben
+	 * @return die Liste
+	 */
+	private ObservableList<Person> ladePersonen() {
+		return FXCollections.observableArrayList(personDAO.findAll());
+	}
+
+	private void personAktualisieren(Person person) {
+		aktuellePerson = person;
+		vornameTextField.setText(person.getVorname());
+		nachnameTextField.setText(person.getNachname());
+		bildView.setImage(person.getPassbild() != null ?
+				new Image(new ByteArrayInputStream(person.getPassbild(), 0, person.getPassbild().length), 0, 100, true, false) :
+				null);
+		if ( person.getGeburtsdatum() != null ) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(person.getGeburtsdatum());
+			geburtsdatumDatePicker.setValue(LocalDate.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH)));
+		}
+		else
+			geburtsdatumDatePicker.setValue(null);
+		if ( person.getGeschlecht() == null ) {
+			maennlichRadioButton.setSelected(false);
+			weiblichRadioButton.setSelected(false);			
+		}
+		else if ( person.getGeschlecht() == Geschlecht.MAENNLICH ) {
+			maennlichRadioButton.setSelected(true);
+			weiblichRadioButton.setSelected(false);
+		}
+		else {
+			maennlichRadioButton.setSelected(false);
+			weiblichRadioButton.setSelected(true);
+			
+		}		
+		kommentarTextField.setText(person.getKommentar());
 	}
 
 	public static void main(String[] args) {

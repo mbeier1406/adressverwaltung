@@ -72,4 +72,16 @@ public interface Person {
 	 */
 	public void setPassbild(final byte[] passbild);
 
+	/**
+	 * Liefert den Kommentar.
+	 * @return den Kommentar
+	 */
+	public String getKommentar();
+
+	/**
+	 * Setzt den Kommentar.
+	 * @param kommentar der Kommentar
+	 */
+	public void setKommentar(final String kommentar);
+
 }
