@@ -49,6 +49,11 @@
 			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.github.mbeier1406</groupId>
 			<artifactId>adressverwaltung-se</artifactId>
 			<version>0.0.1-SNAPSHOT</version>

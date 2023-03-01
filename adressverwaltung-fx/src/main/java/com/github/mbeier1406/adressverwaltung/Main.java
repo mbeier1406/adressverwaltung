@@ -1,9 +1,12 @@
 package com.github.mbeier1406.adressverwaltung;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
+
+import javax.imageio.ImageIO;
 
 import com.github.mbeier1406.adressverwaltung.model.Person;
 import com.github.mbeier1406.adressverwaltung.model.PersonImpl;
@@ -12,6 +15,7 @@ import com.github.mbeier1406.adressverwaltung.model.Person.Geschlecht;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -114,8 +118,9 @@ public class Main extends Application {
 		listView.setOnMouseClicked(event -> {
 			final var person = listView.getSelectionModel().getSelectedItem();
 			System.out.println("person="+person);
-			personAktualisieren(person);
+			personenAnzeigeAktualisieren(person);
 		});
+
 		neuesBildButton.setOnAction(event -> {
 			final var file = fileChooser.showOpenDialog(primaryStage);
 			System.out.println("file="+file);
@@ -124,8 +129,15 @@ public class Main extends Application {
 			}
 
 		});
+
 		neuButton.setOnAction(event -> {});
-		speichernButton.setOnAction(event -> {});
+
+		speichernButton.setOnAction(event -> {
+			aktuaisierePerson();
+			listView.getItems().clear();
+			listView.setItems(ladePersonen());
+		});
+
 		loeschenButton.setOnAction(event -> {});
 	}
 
@@ -143,7 +155,12 @@ public class Main extends Application {
 		return FXCollections.observableArrayList(personDAO.findAll());
 	}
 
-	private void personAktualisieren(Person person) {
+	/**
+	 * Aktualisiert die Anzeige einer Person mit den Daten aus der
+	 * in Liste aktivierten Person.
+	 * @param person die Iin der Liste ausgewählte Person
+	 */
+	private void personenAnzeigeAktualisieren(Person person) {
 		aktuellePerson = person;
 		vornameTextField.setText(person.getVorname());
 		nachnameTextField.setText(person.getNachname());
@@ -171,6 +188,32 @@ public class Main extends Application {
 			
 		}		
 		kommentarTextField.setText(person.getKommentar());
+	}
+
+	/**
+	 * Aktualisiert die ausgewählte Person in {@linkplain #aktuellePerson}
+	 * mit den Werten der Anzeige und speichert sie in der Datenbank.
+	 */
+	private void aktuaisierePerson() {
+		aktuellePerson.setVorname(vornameTextField.getText());
+		aktuellePerson.setNachname(nachnameTextField.getText());
+		aktuellePerson.setGeburtsdatum(geburtsdatumDatePicker.getValue() != null ?
+				java.sql.Date.valueOf(geburtsdatumDatePicker.getValue()) :
+				null);
+		aktuellePerson.setGeschlecht(maennlichRadioButton.isSelected() ? Geschlecht.MAENNLICH : Geschlecht.WEIBLICH);
+		if ( bildView.getImage() != null )
+			try {
+				final var baos = new ByteArrayOutputStream();
+				ImageIO.write(SwingFXUtils.fromFXImage(bildView.getImage(), null), "png", baos);
+				aktuellePerson.setPassbild(baos.toByteArray());
+			}
+			catch ( Exception e ) {
+				e.printStackTrace(); // TODO: Fehlerbehandlung
+			}
+		else
+			aktuellePerson.setPassbild(null);
+		aktuellePerson.setKommentar(kommentarTextField.getText());
+		personDAO.persist((PersonImpl) aktuellePerson);
 	}
 
 	public static void main(String[] args) {
