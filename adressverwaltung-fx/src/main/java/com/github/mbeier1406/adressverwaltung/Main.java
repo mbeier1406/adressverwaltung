@@ -3,14 +3,13 @@ package com.github.mbeier1406.adressverwaltung;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
 
 import com.github.mbeier1406.adressverwaltung.model.Person;
-import com.github.mbeier1406.adressverwaltung.model.PersonImpl;
 import com.github.mbeier1406.adressverwaltung.model.Person.Geschlecht;
+import com.github.mbeier1406.adressverwaltung.model.PersonImpl;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -49,6 +48,7 @@ public class Main extends Application {
 	private RadioButton maennlichRadioButton;
 	private RadioButton weiblichRadioButton;
 	private TextField kommentarTextField;
+	final ListView<Person> listView = new ListView<>();
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -102,14 +102,12 @@ public class Main extends Application {
 		gridPane.add(kommentarTextField, 1, 6);
 		gridPane.add(buttonFlowPane, 0, 7, 2, 1);
 
-		final ListView<Person> listView = new ListView<>();
 		final ObservableList<Person> observableList = FXCollections.observableArrayList(ladePersonen());
 		listView.setItems(observableList);
 
 		final var borderPane = new BorderPane();
 		borderPane.setLeft(listView);
 		borderPane.setCenter(gridPane);
-		//borderPane.se
 
 		primaryStage.setTitle("Adressverwaltung");
 		primaryStage.setScene(new Scene(borderPane, 750, 380));
@@ -130,21 +128,36 @@ public class Main extends Application {
 
 		});
 
-		neuButton.setOnAction(event -> {});
+		neuButton.setOnAction(event -> {
+			aktuellePerson = new PersonImpl();
+			aktuaisierePerson();
+			aktualisiereListe();
+		});
 
 		speichernButton.setOnAction(event -> {
 			aktuaisierePerson();
-			listView.getItems().clear();
-			listView.setItems(ladePersonen());
+			aktualisiereListe();
 		});
 
-		loeschenButton.setOnAction(event -> {});
+		loeschenButton.setOnAction(event -> {
+			if ( aktuellePerson == null ) return;
+			loeschePerson();
+			aktualisiereListe();
+			anzeigeLeeren();
+		});
 	}
 
 	@Override
 	public void stop() throws Exception {
 		super.stop();
 		personDAO.shutdown();
+	}
+
+	/**
+	 * Löschte die Person in {@linkplain #aktuellePerson} aus der DB.
+	 */
+	private void loeschePerson() {
+		personDAO.delete(((PersonImpl) aktuellePerson).getId());
 	}
 
 	/**
@@ -190,6 +203,16 @@ public class Main extends Application {
 		kommentarTextField.setText(person.getKommentar());
 	}
 
+	private void anzeigeLeeren() {
+		vornameTextField.setText(null);
+		nachnameTextField.setText(null);
+		bildView.setImage(null);
+		geburtsdatumDatePicker.setValue(null);
+		maennlichRadioButton.setSelected(false);
+		weiblichRadioButton.setSelected(false);
+		kommentarTextField.setText(null);
+	}
+
 	/**
 	 * Aktualisiert die ausgewählte Person in {@linkplain #aktuellePerson}
 	 * mit den Werten der Anzeige und speichert sie in der Datenbank.
@@ -214,6 +237,14 @@ public class Main extends Application {
 			aktuellePerson.setPassbild(null);
 		aktuellePerson.setKommentar(kommentarTextField.getText());
 		personDAO.persist((PersonImpl) aktuellePerson);
+	}
+
+	/**
+	 * Liste der {@linkplain Person}en aus der DB aktualisieren
+	 */
+	private void aktualisiereListe() {
+		listView.getItems().clear();
+		listView.setItems(ladePersonen());
 	}
 
 	public static void main(String[] args) {
