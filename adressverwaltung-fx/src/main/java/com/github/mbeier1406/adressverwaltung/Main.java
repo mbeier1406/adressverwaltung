@@ -1,7 +1,10 @@
 package com.github.mbeier1406.adressverwaltung;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.Calendar;
 
@@ -60,7 +63,7 @@ public class Main extends Application {
 		final var nachnameLabel = new Label("Nachname");
 		nachnameTextField = new TextField();
 		final var bildLabel = new Label("Passbild");
-		bildView = new ImageView(new Image("file:src/main/resources/images/maxmustermann.png", 0, 100, true, false));
+		bildView = new ImageView();
 		final var neuesBildButton = new Button("Passbild laden");
 		final var geburtsdatumLabel = new Label("Geburtsdatum");
 		geburtsdatumDatePicker = new DatePicker();
@@ -123,7 +126,12 @@ public class Main extends Application {
 			final var file = fileChooser.showOpenDialog(primaryStage);
 			System.out.println("file="+file);
 			if ( file != null ) {
-				
+				// "file:src/main/resources/images/maxmustermann.png"
+				try {
+					bildView.setImage(new Image(new BufferedInputStream(new FileInputStream(file)), 0, 100, true, false));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
 
 		});
@@ -231,7 +239,7 @@ public class Main extends Application {
 				aktuellePerson.setPassbild(baos.toByteArray());
 			}
 			catch ( Exception e ) {
-				e.printStackTrace(); // TODO: Fehlerbehandlung
+				e.printStackTrace();
 			}
 		else
 			aktuellePerson.setPassbild(null);
