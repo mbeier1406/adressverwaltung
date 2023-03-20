@@ -27,9 +27,9 @@ import com.github.mbeier1406.adressverwaltung.DaoJPA;
  * @author mbeier
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DaoJPATest {
+public class DaoJPAPersonTest {
 
-	public static final Logger LOGGER = LogManager.getLogger(DaoJPATest.class);
+	public static final Logger LOGGER = LogManager.getLogger(DaoJPAPersonTest.class);
 
 	/** Das zu testende Objekt */
 	public static Dao<PersonImpl> dao;

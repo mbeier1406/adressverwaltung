@@ -14,3 +14,5 @@ select * from person;
 update person set vorname = 'Anabell' where id_person = 1701;
 delete from person;
 -- commit;
+
+select * from adresse;

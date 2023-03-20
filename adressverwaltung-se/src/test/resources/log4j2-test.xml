@@ -12,6 +12,18 @@
     </Appenders>
 
     <Loggers>
+        <Logger name="org.hibernate.SQL" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.hibernate.type.descriptor.sql" level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.hibernate.stat" level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.hibernate.cache" level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Root level="trace" includeLocation="true">
             <AppenderRef ref="Console" />
         </Root>
