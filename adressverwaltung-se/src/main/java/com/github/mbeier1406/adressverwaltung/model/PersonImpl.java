@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -38,6 +40,7 @@ public class PersonImpl implements Serializable, Person {
 	private byte[] passbild;
 	private char[] daten;
 	private String kommentar;
+	private Adresse adresse;
 	private static final long serialVersionUID = 1L;
 
 	public PersonImpl() {
@@ -147,6 +150,15 @@ public class PersonImpl implements Serializable, Person {
 
 	public void setDaten(char[] daten) {
 		this.daten = daten;
+	}
+
+	@OneToOne(cascade={CascadeType.ALL})
+	public Adresse getAdresse() {
+		return adresse;
+	}
+
+	public void setAdresse(Adresse adresse) {
+		this.adresse = adresse;
 	}
 
 	public String toInfo() {

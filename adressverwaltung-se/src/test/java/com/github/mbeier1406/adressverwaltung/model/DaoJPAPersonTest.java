@@ -109,4 +109,20 @@ public class DaoJPAPersonTest {
 		dao.delete(id);
 	}
 
+	/** Person mit Adresse speichern */
+	@Test
+	public void z0_testeSpeichernMitAdresse() {
+		PersonImpl person = new PersonImpl("Karl", "mit Adresse", new Date(), MAENNLICH, null);
+		person.setAdresse(new Adresse(11111, "Entenhausen", "Bei Donald"));
+		dao.persist(person);
+	}
+
+	/** Person mit Adresse cascdierend löschen */
+	@Test
+	public void z1_testeLoeschenMitAdresse() {
+		final var person = dao.findByProperty("nachname", "mit Adresse");
+		LOGGER.info("person={}", person);
+		dao.delete(person.getId());
+	}
+
 }
