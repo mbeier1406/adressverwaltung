@@ -113,7 +113,7 @@ public class DaoJPAPersonTest {
 	@Test
 	public void z0_testeSpeichernMitAdresse() {
 		PersonImpl person = new PersonImpl("Karl", "mit Adresse", new Date(), MAENNLICH, null);
-		person.setAdresse(new Adresse(11111, "Entenhausen", "Bei Donald"));
+		person.setAdresse(new Adresse(11111, "Entenhausen", "Bei Donald", person));
 		dao.persist(person);
 	}
 
@@ -123,6 +123,12 @@ public class DaoJPAPersonTest {
 		final var person = dao.findByProperty("nachname", "mit Adresse");
 		LOGGER.info("person={}", person);
 		dao.delete(person.getId());
+	}
+
+	/** Person ohne Adresse speichern erzeugt einen Fehler (Pflichtfeld) */
+	@Test(expected=javax.persistence.PersistenceException.class)
+	public void z2_testeSpeichernMitAdresse() {
+		dao.persist(new PersonImpl("X", "Y", new Date(), MAENNLICH, null));
 	}
 
 }

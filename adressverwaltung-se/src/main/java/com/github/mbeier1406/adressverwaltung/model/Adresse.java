@@ -3,6 +3,7 @@ package com.github.mbeier1406.adressverwaltung.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Entity implementation class for Entity: Adresse
@@ -17,15 +18,19 @@ public class Adresse {
 	private String ort;
 	private String strasseUndHausnummer;
 
+	@OneToOne(mappedBy="adresse")
+	private PersonImpl person;
+
 	public Adresse() {
 		super();
 	}
 
-	public Adresse(int plz, String ort, String strasseUndHausnummer) {
+	public Adresse(int plz, String ort, String strasseUndHausnummer, PersonImpl person) {
 		super();
 		this.plz = plz;
 		this.ort = ort;
 		this.strasseUndHausnummer = strasseUndHausnummer;
+		this.person = person;
 	}
 
 	public long getId() {
@@ -60,10 +65,18 @@ public class Adresse {
 		this.strasseUndHausnummer = strasseUndHausnummer;
 	}
 
+	public PersonImpl getPerson() {
+		return person;
+	}
+
+	public void setPerson(PersonImpl person) {
+		this.person = person;
+	}
+
 	@Override
 	public String toString() {
 		return "Adresse [id=" + id + ", plz=" + plz + ", ort=" + ort + ", strasseUndHausnummer=" + strasseUndHausnummer
-				+ "]";
+				+ ", person=" + person + "]";
 	}
 
 }
