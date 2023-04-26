@@ -25,7 +25,7 @@ public class DaoJPAAdresseTest {
 	public static Dao<Adresse> dao;
 
 	/** Das Objekt, mit dem getestet wird */
-	public static Adresse a = new Adresse(12345, "Ort", "Straße 1", new PersonImpl("X", "X", new Date(), Geschlecht.WEIBLICH, null));
+	public Adresse adresse;
 
 	/** DAO initialisieren */
 	@Before
@@ -42,11 +42,13 @@ public class DaoJPAAdresseTest {
 	}
 
 	/** Fügt einen Datensatz ein, der später abgefragt wird */
-	@Ignore
+//	@Ignore
 	@Test
 	public void testInsert() {
-		dao.persist(a);
-		LOGGER.info("id={}", a.getId());
+		//= new Adresse(12345, "Ort", "Straße 1", new PersonImpl("X", "X", new Date(), Geschlecht.WEIBLICH, null));
+		adresse = new Adresse(12345, "Ort", "Straße 1", null);
+		dao.persist(adresse);
+		LOGGER.info("id={}", adresse.getId());
 	}
 
 }
