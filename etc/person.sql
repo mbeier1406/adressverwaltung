@@ -10,9 +10,13 @@ CREATE TABLE PERSON (
 CREATE INDEX NACHNAMENINDEX ON PERSON(NACHNAME);
 
 
+drop table person;
 select * from person;
-update person set vorname = 'Anabell' where id_person = 1701;
+update person set vorname = 'Anabell' where id_person = 4202;
 delete from person;
 -- commit;
 
+drop table adresse;
+delete from adresse;
 select * from adresse;
+select * from login;

@@ -21,9 +21,7 @@ public class PersonPersistenceIT {
 
 	@Test
 	public void testePersitieren() {
-		Person person = new PersonImpl("Friedl", "Max", new Date(), Person.Geschlecht.MAENNLICH, null);
-		final var adresse = new Adresse(12345, "Ort", "Strasse 1", (PersonImpl) person);
-		person.setAdresse(adresse);
+		Person person = new PersonImpl("Max", "Mustermann", new Date(), Person.Geschlecht.MAENNLICH, null);
 		LOGGER.info("Person: {}", person);
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("adressverwaltung");
 		EntityManager em = emf.createEntityManager();
@@ -33,9 +31,6 @@ public class PersonPersistenceIT {
 		LOGGER.info("person={}", person);
 //		em.remove(person);
 		em.getTransaction().commit();
-		final var adresse2 = em.find(Adresse.class, person.getAdresse().getId());
-		LOGGER.info("adresse2={}", adresse2);
-		LOGGER.info("person2={}", adresse2.getPerson());
 		em.close();
 		emf.close();
 	}

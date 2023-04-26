@@ -84,16 +84,4 @@ public interface Person {
 	 */
 	public void setKommentar(final String kommentar);
 
-	/**
-	 * Liefert die Adresse zur Person.
-	 * @return die Adresse
-	 */
-	public Adresse getAdresse();
-
-	/**
-	 * Setzt die Adresse zur Person.
-	 * @param adresse die Adresse
-	 */
-	public void setAdresse(final Adresse adresse);
-
 }
