@@ -46,8 +46,6 @@ public class DaoJPAPersonTest {
 		}
 	}
 
-	public static long id = 0;
-
 	/** DAO initialisieren */
 	@BeforeClass
 	public static void init() {
@@ -73,13 +71,13 @@ public class DaoJPAPersonTest {
 	@Test
 	public void b_testInsert() {
 		dao.persist(p);
-		LOGGER.info("id={}", id=p.getId());
+		LOGGER.info("id={}", p.getId());
 	}
 
 	/** Datensatz anhand der in {@linkplain #b_testInsert()} vergebenen {@linkplain #id} wieder einlesen */
 	@Test
 	public void c_testeFindById() {
-		final var person = dao.findById(id);
+		final var person = dao.findById(p.getId());
 		LOGGER.info("person={}", person);
 		assertThat(dao.getPersistenceUnitUtil().getIdentifier(p), equalTo(p.getId()));
 		assertThat(dao.getPersistenceUnitUtil().isLoaded(p), equalTo(true));
@@ -106,7 +104,7 @@ public class DaoJPAPersonTest {
 	/** Person mit der {@linkplain #id} wieder löschen darf keine Exception werfen */
 	@Test
 	public void x_testeLoeschen() {
-		dao.delete(id);
+		dao.delete(p.getId());
 	}
 
 	/** Person mit Adresse speichern */

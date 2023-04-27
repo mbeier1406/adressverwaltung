@@ -144,6 +144,19 @@ public class PersonImpl implements Serializable, Person {
 		this.kommentar = kommentar;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	@OneToOne(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, optional=false, orphanRemoval=true)
+	public Adresse getAdresse() {
+		return adresse;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void setAdresse(final Adresse adresse) {
+		this.adresse = adresse;
+	}
+
 	@Transient // nicht persistieren
 	public char[] getDaten() {
 		return daten;
@@ -153,18 +166,9 @@ public class PersonImpl implements Serializable, Person {
 		this.daten = daten;
 	}
 
-	@OneToOne(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, optional=false, orphanRemoval=true)
-	public Adresse getAdresse() {
-		return adresse;
-	}
-
-	public void setAdresse(Adresse adresse) {
-		this.adresse = adresse;
-	}
-
 	public String toInfo() {
 		return "PersonImpl [id=" + id + ", vorname=" + vorname + ", nachname=" + nachname + ", geburtsdatum="
-				+ geburtsdatum + ", geschlecht=" + geschlecht + "]";
+				+ geburtsdatum + ", geschlecht=" + geschlecht + ", adresse=" + adresse + "]";
 	}
 
 	@Override

@@ -2,11 +2,12 @@ package com.github.mbeier1406.adressverwaltung.model;
 
 import java.util.Date;
 
+import javax.persistence.RollbackException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.mbeier1406.adressverwaltung.Dao;
@@ -24,9 +25,6 @@ public class DaoJPAAdresseTest {
 	/** Das zu testende Objekt */
 	public static Dao<Adresse> dao;
 
-	/** Das Objekt, mit dem getestet wird */
-	public static Adresse a = new Adresse(12345, "Ort", "Straße 1", new PersonImpl("X", "X", new Date(), Geschlecht.WEIBLICH, null));
-
 	/** DAO initialisieren */
 	@Before
 	public void init() {
@@ -41,12 +39,20 @@ public class DaoJPAAdresseTest {
 		dao.shutdown();
 	}
 
-	/** Fügt einen Datensatz ein, der später abgefragt wird */
-	@Ignore
-	@Test
-	public void testInsert() {
+	/** Kann nicht gespeichert werden, da {@linkplain Adresse#getPerson()} transient: <code>object references an unsaved transient instance</code> */
+	@Test(expected = RollbackException.class)
+	public void insertMitTransienterPersonSchlaegtFehl() {
+		// Das Objekt, mit dem getestet wird: Person-Objekt ist im Status "transient"
+		final var a = new Adresse(12345, "Ort", "Straße 1", new PersonImpl("X", "X", new Date(), Geschlecht.WEIBLICH, null));
 		dao.persist(a);
-		LOGGER.info("id={}", a.getId());
+	}
+
+	/** Kann gespeichert werden, da {@linkplain Adresse#getPerson()} nicht gesetzt ist */
+	@Test
+	public void insertOhnePersonIstMoeglich() {
+		// Das Objekt, mit dem getestet wird: Person-Objekt ist NULL
+		final var a = new Adresse(12345, "Ort", "Straße 1", null);
+		dao.persist(a);
 	}
 
 }
