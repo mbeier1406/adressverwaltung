@@ -10,14 +10,20 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Query;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.mbeier1406.adressverwaltung.model.PersonImpl;
 
 /**
  * Standard JPA-implementierung.
+ * 
  * @author mbeier
  * @param <T> Entity z. B. {@linkplain PersonImpl}
  */
 public class DaoJPA<T> implements Dao<T> {
+
+	private static final Logger LOGGER = LogManager.getLogger(DaoJPA.class);
 
 	/** Name der Persistenzeinheit ist {@value} */
 	private static final String ADRESSVERWALTUNG = "adressverwaltung";
@@ -62,25 +68,40 @@ public class DaoJPA<T> implements Dao<T> {
 	/** {@inheritDoc} */
 	@Override
 	public T findByProperty(String property, String value) throws IllegalArgumentException {
-		return (T) em.createQuery("select p from " + c.getSimpleName() + " p where p." + property + " = :x", c)
-	    	     .setParameter("x", value)
-	    	     .getSingleResult();
+		return (T) em
+				.createQuery("select p from " + c.getSimpleName() + " p where p." + property + " = :x", c)
+				.setParameter("x", value)
+				.getSingleResult();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void persist(T t) {
-	     em.getTransaction().begin();
-	     em.persist(t);
-	     em.getTransaction().commit();	}
+		try {
+			em.getTransaction().begin();
+			em.persist(t);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			LOGGER.debug("t={}", t, e);
+			em.getTransaction().rollback();
+			throw e;
+		}
+	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void delete(long id) {
-	     em.getTransaction().begin();
-	     T t = em.getReference(c, id);
-	     em.remove(t);
-	     em.getTransaction().commit();	}
+		try {
+			em.getTransaction().begin();
+			T t = em.getReference(c, id);
+			em.remove(t);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			LOGGER.debug("id={}", id, e);
+			em.getTransaction().rollback();
+			throw e;
+		}
+	}
 
 	@Override
 	public String toString() {

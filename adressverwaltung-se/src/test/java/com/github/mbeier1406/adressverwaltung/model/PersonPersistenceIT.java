@@ -1,7 +1,6 @@
 package com.github.mbeier1406.adressverwaltung.model;
 
 import java.util.Date;
-import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
