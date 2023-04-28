@@ -3,9 +3,12 @@ package com.github.mbeier1406.adressverwaltung;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Query;
@@ -53,8 +56,8 @@ public class DaoJPA<T> implements Dao<T> {
 
 	/** {@inheritDoc} */
 	@Override
-	public T findById(long id) {
-		return em.find(c, id);
+	public Optional<T> findById(long id) {
+		return Optional.ofNullable(em.find(c, id));
 	}
 
 	/** {@inheritDoc} */
@@ -67,11 +70,16 @@ public class DaoJPA<T> implements Dao<T> {
 
 	/** {@inheritDoc} */
 	@Override
-	public T findByProperty(String property, String value) throws IllegalArgumentException {
-		return (T) em
-				.createQuery("select p from " + c.getSimpleName() + " p where p." + property + " = :x", c)
-				.setParameter("x", value)
-				.getSingleResult();
+	public Optional<T> findByProperty(String property, String value) throws IllegalArgumentException {
+		try {
+			return Optional.ofNullable((T) em
+					.createQuery("select p from " + c.getSimpleName() + " p where p." + property + " = :x", c)
+					.setParameter("x", value)
+					.getSingleResult());
+		}
+		catch ( NoResultException | NonUniqueResultException e ) {
+			return Optional.empty();
+		}
 	}
 
 	/** {@inheritDoc} */

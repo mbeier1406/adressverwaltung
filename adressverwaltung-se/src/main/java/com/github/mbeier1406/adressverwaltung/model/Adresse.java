@@ -75,7 +75,7 @@ public class Adresse {
 
 	@Override
 	public String toString() {
-		return "Adresse [id=" + id + ", plz=" + plz + ", ort=" + ort + ", strasseUndHausnummer=" + strasseUndHausnummer + ", person=" + person.toInfo() + "]";
+		return "Adresse [id=" + id + ", plz=" + plz + ", ort=" + ort + ", strasseUndHausnummer=" + strasseUndHausnummer + ", person=" + person + "]";
 	}
 
 }

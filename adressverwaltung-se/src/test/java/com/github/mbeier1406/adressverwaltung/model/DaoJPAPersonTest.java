@@ -2,12 +2,16 @@ package com.github.mbeier1406.adressverwaltung.model;
 
 import static com.github.mbeier1406.adressverwaltung.model.Person.Geschlecht.MAENNLICH;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.PersistenceException;
 
@@ -34,6 +38,9 @@ public class DaoJPAPersonTest {
 	/** Das zu testende Objekt */
 	public static Dao<PersonImpl> dao;
 
+	/** Zum Prüfen, ob Adressen vorhanden sind */
+	public static Dao<Adresse> daoAdr;
+
 	/** Das Objekt, mit dem getestet wird */
 	public static PersonImpl p;
 	static {
@@ -46,11 +53,12 @@ public class DaoJPAPersonTest {
 		}
 	}
 
-	/** DAO initialisieren */
+	/** DAO initialisieren, DB leeren */
 	@BeforeClass
 	public static void init() {
 		LOGGER.info("DB verbinden...");
 		dao = new DaoJPA<>(PersonImpl.class);
+		daoAdr = new DaoJPA<>(Adresse.class);
 	}
 
 	/** Zuletzt Datenbank schließen */
@@ -83,59 +91,54 @@ public class DaoJPAPersonTest {
 		LOGGER.info("id={}", p.getId());
 	}
 
-//	/** Datensatz anhand der in {@linkplain #b_testInsert()} vergebenen {@linkplain #id} wieder einlesen */
-//	@Test
-//	public void c_testeFindById() {
-//		final var person = dao.findById(p.getId());
-//		LOGGER.info("person={}", person);
-//		assertThat(dao.getPersistenceUnitUtil().getIdentifier(p), equalTo(p.getId()));
-//		assertThat(dao.getPersistenceUnitUtil().isLoaded(p), equalTo(true));
-//		assertThat(dao.getPersistenceUnitUtil().isLoaded(p, "vorname"), equalTo(true));
-//		assertThat(person, equalTo(p));
-//	}
-//
-//	/** Datensatz anhand eines der in {@linkplain #b_testInsert()} vergebenen Proprties wieder einlesen */
-//	@Test
-//	public void d_testeFindByProperty() {
-//		final var person = dao.findByProperty("vorname", "Kulle");
-//		LOGGER.info("person={}", person);
-//		assertThat(person, equalTo(p));
-//	}
-//
-//	/** Datensatz aus {@linkplain #b_testInsert()} aus der Liste aller Datensätze finden */
-//	@Test
-//	public void e_testeFindAll() {
-//		List<PersonImpl> personen = (List<PersonImpl>) dao.findAll();
-//		LOGGER.info("personen={}", personen);
-//		assertThat(personen, hasItem(p));
-//	}
-//
-//	/** Person mit der {@linkplain #id} wieder löschen darf keine Exception werfen */
-//	@Test
-//	public void x_testeLoeschen() {
-//		dao.delete(p.getId());
-//	}
-//
-//	/** Person mit Adresse speichern */
-//	@Test
-//	public void z0_testeSpeichernMitAdresse() {
-//		PersonImpl person = new PersonImpl("Karl", "mit Adresse", new Date(), MAENNLICH, null);
-//		person.setAdresse(new Adresse(11111, "Entenhausen", "Bei Donald", person));
-//		dao.persist(person);
-//	}
-//
-//	/** Person mit Adresse cascdierend löschen */
-//	@Test
-//	public void z1_testeLoeschenMitAdresse() {
-//		final var person = dao.findByProperty("nachname", "mit Adresse");
-//		LOGGER.info("person={}", person);
-//		dao.delete(person.getId());
-//	}
-//
-//	/** Person ohne Adresse speichern erzeugt einen Fehler (Pflichtfeld) */
-//	@Test(expected=javax.persistence.PersistenceException.class)
-//	public void z2_testeSpeichernMitAdresse() {
-//		dao.persist(new PersonImpl("X", "Y", new Date(), MAENNLICH, null));
-//	}
+	/** Adressliste muss jetzt einen Datensatz enthalten */
+	@Test
+	public void b2_testeAdresseWurdeMitGespeichert() {
+		final var adr = daoAdr.findByProperty("ort", "Ort");
+		assertThat(adr, not(equalTo(Optional.empty())));
+		LOGGER.info("adr={}", adr.get());
+	}
+
+	/** Datensatz anhand der in {@linkplain #b_testInsert()} vergebenen ID aus {@linkplain #p} wieder einlesen */
+	@Test
+	public void c_testeFindById() {
+		final var person = dao.findById(p.getId());
+		assertThat(person, not(equalTo(Optional.empty())));
+		LOGGER.info("person={}", person.get().toInfo());
+		assertThat(dao.getPersistenceUnitUtil().getIdentifier(person.get()), equalTo(p.getId()));
+		assertThat(dao.getPersistenceUnitUtil().isLoaded(person.get()), equalTo(true));
+		assertThat(dao.getPersistenceUnitUtil().isLoaded(person.get(), "vorname"), equalTo(true));
+		assertThat(p, equalTo(person.get()));
+	}
+
+	/** Datensatz anhand eines der in {@linkplain #b_testInsert()} vergebenen Proprties wieder einlesen */
+	@Test
+	public void d_testeFindByProperty() {
+		final var person = dao.findByProperty("vorname", "Kulle");
+		assertThat(person, not(equalTo(Optional.empty())));
+		LOGGER.info("person={}", person.get().toInfo());
+		assertThat(person.get(), equalTo(p));
+	}
+
+	/** Datensatz aus {@linkplain #b_testInsert()} aus der Liste aller Datensätze finden */
+	@Test
+	public void e_testeFindAll() {
+		final var personen = (List<PersonImpl>) dao.findAll();
+		LOGGER.info("personen={}", personen);
+		assertThat(personen, hasItem(p));
+	}
+
+	/** Person mit der ID von {@linkplain #p} wieder löschen: darf keine Exception werfen */
+	@Test
+	public void f_testeLoeschen() {
+		dao.delete(p.getId());
+	}
+
+	/** Adressliste muss jetzt leer sein, da mit gelöscht */
+	@Test
+	public void g_testeAdresseWurdeMitGeloescht() {
+		final var adr = daoAdr.findByProperty("ort", "Ort");
+		assertThat(adr, equalTo(Optional.empty()));
+	}
 
 }

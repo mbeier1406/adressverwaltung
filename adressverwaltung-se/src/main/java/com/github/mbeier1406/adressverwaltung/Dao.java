@@ -1,6 +1,7 @@
 package com.github.mbeier1406.adressverwaltung;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnitUtil;
@@ -26,9 +27,9 @@ public interface Dao<T> {
 	/**
 	 * Sucht das Objekt anhand seiner ID.
 	 * @param id die ID des Objekts
-	 * @return das Objekt oder <b>null</b>, wenn nicht vorhanden
+	 * @return das Objekt oder <b>{@linkplain Optional#empty()}</b>, wenn nicht vorhanden
 	 */
-	public T findById(long id);
+	public Optional<T> findById(long id);
 
 	/**
 	 * Liefert alle Objekte des Typs {@linkplain T}.
@@ -40,10 +41,10 @@ public interface Dao<T> {
 	 * Liefert das Objekt zur Suchanfrage.
 	 * @param property Key
 	 * @param value Wert
-	 * @return das gefundene Objekt oder <b>null</b>, wenn nicht vorhanden
+	 * @return das gefundene Objekt oder <b>{@linkplain Optional#empty()}</b>, wenn nicht vorhanden
 	 * @throws IllegalArgumentException falls es mehr als einen Treffer gibt
 	 */
-	public T findByProperty(String property, String value) throws IllegalArgumentException;
+	public Optional<T> findByProperty(String property, String value) throws IllegalArgumentException;
 
 	/**
 	 * Setzt das Entity {@linkplain T} in den Zustand "managed".
