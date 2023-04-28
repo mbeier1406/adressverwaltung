@@ -141,4 +141,22 @@ public class DaoJPAPersonTest {
 		assertThat(adr, equalTo(Optional.empty()));
 	}
 
+	/** Testet das automatische Löschen von alten Adressen wenn {@linkplain #p} eine neue erhält */
+	@Test
+	public void h_testeOrphanRemoval() {
+		p.setId(0); // Objekt ist detached!
+		var a = new Adresse(1234, "Ort", "Strasse", p);
+		p.setAdresse(a);
+		dao.persist(p);
+		var adr = daoAdr.findByProperty("ort", "Ort");
+		assertThat(adr, not(equalTo(Optional.empty())));
+		a = new Adresse(1235, "Ort2", "Strasse2", p);
+		p.setAdresse(a);
+		dao.persist(p);
+		adr = daoAdr.findByProperty("ort", "Ort");
+		assertThat(adr, equalTo(Optional.empty()));
+		adr = daoAdr.findByProperty("ort", "Ort2");
+		assertThat(adr, not(equalTo(Optional.empty())));
+	}
+
 }
